@@ -8,14 +8,14 @@ let getReposByUsername = (username, callback) => {
   // The options object has been provided to help you out,
   // but you'll have to fill in the URL
   let options = {
-    url: 'https://api.github.com/repos/' + username + '/repos',
+    url: 'https://api.github.com/users/' + username + '/repos',
     headers: {
       'User-Agent': 'request',
       'Authorization': `token ${config.TOKEN}`
     }
   };
 
-  axios.get(options.url, {headers: options.headers}).then(data => {
+  axios.get(options.url, {headers: options.headers}).then(err => {
     if (err) {
       callback(err);
     } else {

@@ -19,20 +19,20 @@ class App extends React.Component {
 
     // TODO: post request upon searching a username
     $.ajax({
-      url: 'http://localhost:1128/repos',
+      url: '/repos',
       type: 'POST',
       contentType: 'application/json',
       data: username,
       success: (data) => {
         console.log('Successful POST!');
         $.ajax({
-          url: 'http://localhost:1128/repos',
+          url: '/repos',
           type: 'GET',
           contentType: 'application/json',
           data: username,
           success: (repoData) => {
             console.log('Successful GET!');
-            this.setState({ repos: repoData })
+            this.setState({ repos: [repoData] })
           },
           error: (err) => {
             console.log('Failed GET!', err);

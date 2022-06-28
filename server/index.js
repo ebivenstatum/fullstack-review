@@ -11,7 +11,7 @@ app.post('/repos', function (req, res) {
   // and get the repo information from the github API, then
   // save the repo information in the database
   // req comes from index.js
-  var username = req.body || 'hackreactor';
+  var username = req.body || 'octocat';
 
   // Should be an array of object, each object being a repo
   helper.getReposByUsername(username, (err, data) => {
