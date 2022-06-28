@@ -27,7 +27,7 @@ let save = (/* TODO */ repository) => {
 
   // check to see if that repo id is already in database, if so, overwrite it;
   var exists = false;
-  Repo.findOne({repo: {id: repository.id}}, (err, count) => {
+  Repo.findOne({ repo: { id: repository.id } }, (err, count) => {
     if (count > 0) {
       exists = true;
     }
@@ -42,11 +42,19 @@ let save = (/* TODO */ repository) => {
       }
     });
   } else {
-    Repo.findOneAndUpdate({repo: {id: repository.id}}, newRepo);
+    Repo.findOneAndUpdate({ repo: { id: repository.id } }, newRepo);
   }
-  // rem to catch errors
 
+  Repo.sort(rating: 'desc');
 
 }
 
+let top25 = () => {
+  var repos = Repo
+                .find()
+                .limit(25);
+  return JSON.stringify(repos);
+}
+
 module.exports.save = save;
+module.exports.top25 = top25;
