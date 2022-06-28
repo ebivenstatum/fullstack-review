@@ -11,7 +11,7 @@ let repoSchema = mongoose.Schema({
 
 let Repo = mongoose.model('Repo', repoSchema);
 
-let save = (/* TODO */ repository) => {
+let save = (repository, callback) => {
   // TODO: Your code here
   // This function should save a repo or repos to
   // the MongoDB
@@ -27,8 +27,8 @@ let save = (/* TODO */ repository) => {
 
   // check to see if that repo id is already in database, if so, overwrite it;
   var exists = false;
-  Repo.findOne({ repo: { id: repository.id } }, (err, count) => {
-    if (count > 0) {
+  Repo.findOne({ repo: { id: repository.id } }, (err) => {
+    if (!err) {
       exists = true;
     }
   })
@@ -36,24 +36,24 @@ let save = (/* TODO */ repository) => {
   if (!exists) {
     newRepo.save((err, data) => {
       if (err) {
-        console.log(err);
+        callback(err, newRepo);
       } else {
-        console.log('Data Saved'); // No callback so use console.log
+        callback(null, newRepo);
       }
     });
   } else {
     Repo.findOneAndUpdate({ repo: { id: repository.id } }, newRepo);
   }
 
-  Repo.sort(rating: 'desc');
+  Repo.sort({rating: 'desc'});
 
 }
 
-let top25 = () => {
+let top25 = (callback) => {
   var repos = Repo
-                .find()
+                .find({})
                 .limit(25);
-  return JSON.stringify(repos);
+  callback(repos);
 }
 
 module.exports.save = save;
