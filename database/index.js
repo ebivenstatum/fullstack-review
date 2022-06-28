@@ -25,14 +25,27 @@ let save = (/* TODO */ repository) => {
     url: repository.url
   });
 
-  // rem to catch errors
-  newRepo.save((err, data) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log('Data Saved'); // No callback so use console.log
+  // check to see if that repo id is already in database, if so, overwrite it;
+  var exists = false;
+  Repo.findOne({repo: {id: repository.id}}, (err, count) => {
+    if (count > 0) {
+      exists = true;
     }
-  });
+  })
+
+  if (!exists) {
+    newRepo.save((err, data) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('Data Saved'); // No callback so use console.log
+      }
+    });
+  } else {
+    Repo.findOneAndUpdate({repo: {id: repository.id}}, newRepo);
+  }
+  // rem to catch errors
+
 
 }
 
