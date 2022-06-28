@@ -52,7 +52,7 @@ class App extends React.Component {
   componentDidMount() {
 
     axios.get('/repos').then(res => {
-      this.setState({repos: JSON.parse(res)});
+      this.setState({repos: [res]});
     });
 
   }
@@ -63,7 +63,6 @@ class App extends React.Component {
       <h1>Github Fetcher</h1>
       <RepoList repos={this.state.repos} />
       <Search onSearch={this.search.bind(this)} />
-      <p>{this.state.repos}</p>
     </div>)
   }
 }

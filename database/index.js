@@ -52,7 +52,17 @@ let save = (repository, callback) => {
 let top25 = (callback) => {
   var repos = Repo
                 .find({})
-                .limit(25);
+                .limit(25)
+                .then(result => {
+                  let repoList = result.map((data) => {
+                    return {
+                      owner: {id: data._doc.owner.id, name: data._doc.owner.name},
+                      repo: {id: dat._doc.repo.id, name: dat._doc.repo.name},
+                      rating: dat._doc.rating,
+                      url: dat._doc.url
+                    };
+                  });
+                });
   callback(repos);
 }
 
