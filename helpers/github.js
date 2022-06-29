@@ -15,11 +15,11 @@ let getReposByUsername = (username, callback) => {
     }
   };
 
-  axios.get(options.url, {headers: options.headers}).then(err => {
+  axios.get(options.url, {headers: options.headers}).then((err, data) => {
     if (err) {
       callback(err);
     } else {
-      callback(null);
+      callback(null, data);
     }
   });
 

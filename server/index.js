@@ -11,22 +11,16 @@ app.post('/repos', function (req, res) {
   // and get the repo information from the github API, then
   // save the repo information in the database
   // req comes from index.js
-  var username = req.body || 'octocat';
+  var username = 'ebivenstatum';
 
   // Should be an array of object, each object being a repo
-  helper.getReposByUsername(username, (err, data) => {
-    if (err) {
-      console.log('ERROR: ', err);
-    } else {
-      var repoData = JSON.parse(data);
-      // need to assign each separate repo to the database
-      repoData.forEach(repo, database.save(repo, (err) => {
-        if (err) {
-          console.log(err);
-        }
-      }));
-      res.send();
-    }
+  helper.getReposByUsername(username, (response) => {
+    response.data.forEach(d => database.save(d, (err) => {
+      if (err) {
+        console.log(err);
+      }
+    }));
+    res.send();
 
   });
 
@@ -35,9 +29,9 @@ app.post('/repos', function (req, res) {
 app.get('/repos', function (req, res) {
   // TODO - your code here!
   // This route should send back the top 25 repos
-  var results = database.top25(data => {
-      res.send(data);
-  });
+  database.top25().then(results => res.end(JSON.stringify(results)));
+  //res.send(JSON.stringify([results]));
+
 
 });
 

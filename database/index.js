@@ -10,8 +10,13 @@ let repoSchema = mongoose.Schema({
 });
 
 let Repo = mongoose.model('Repo', repoSchema);
+/*Repo.remove({}, function(err) {
+  console.log('collection removed')
+});*/
+
 
 let save = (repository, callback) => {
+
   // TODO: Your code here
   // This function should save a repo or repos to
   // the MongoDB
@@ -21,8 +26,8 @@ let save = (repository, callback) => {
   var newRepo = new Repo({
     owner: { id: repository.owner.id, name: repository.owner.login },
     repo: { id: repository.id, name: repository.name },
-    rating: repository.forks, // going by number of forks, the more the better
-    url: repository.url
+    rating: repository.stargazers_count, // going by number of stars, the more the better
+    url: repository.html_url
   });
 
   // check to see if that repo id is already in database, if so, overwrite it;
@@ -45,25 +50,10 @@ let save = (repository, callback) => {
     Repo.findOneAndUpdate({ repo: { id: repository.id } }, newRepo);
   }
 
-  Repo.sort({rating: 'desc'});
-
 }
 
-let top25 = (callback) => {
-  var repos = Repo
-                .find({})
-                .limit(25)
-                .then(result => {
-                  let repoList = result.map((data) => {
-                    return {
-                      owner: {id: data._doc.owner.id, name: data._doc.owner.name},
-                      repo: {id: dat._doc.repo.id, name: dat._doc.repo.name},
-                      rating: dat._doc.rating,
-                      url: dat._doc.url
-                    };
-                  });
-                });
-  callback(repos);
+let top25 = (/*callback*/) => {
+  return Repo.find({}).sort({ rating: 'desc' }).limit(25);
 }
 
 module.exports.save = save;

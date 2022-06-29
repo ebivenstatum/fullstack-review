@@ -5,7 +5,12 @@ const RepoList = (props) => (
     <h4> Repo List Component </h4>
     There are {props.repos.length} repos.
     <ol>
-      <li>{props.repos}</li>
+      {props.repos.map(item =>
+      <li key={item._id}>
+        <a href={item.url}>{item.repo.name}</a> +
+        {` by ${item.owner.name} with ${item.rating} stars`}
+      </li>
+      )}
     </ol>
   </div>
 )

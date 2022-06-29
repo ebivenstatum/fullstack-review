@@ -12,57 +12,64 @@ class App extends React.Component {
       repos: []
     }
 
+    this.search = this.search.bind(this);
+
   }
 
   search(username) {
     console.log(`${username} was searched`);
 
     // TODO: post request upon searching a username
-    $.ajax({
-      url: '/repos',
-      type: 'POST',
-      contentType: 'application/json',
-      data: username,
-      success: (data) => {
-        console.log('Successful POST!');
-        $.ajax({
-          url: '/repos',
-          type: 'GET',
-          contentType: 'application/json',
-          data: username,
-          success: (repoData) => {
-            console.log('Successful GET!');
-            this.setState({ repos: [repoData] })
-          },
-          error: (err) => {
-            console.log('Failed GET!', err);
-          }
-        });
-      },
-      error: (err) => {
-        console.log('Failed POST!', err)
-      }
+    var newRepos;
 
+    $.post('/repos', {term: username});
+    $.get('/repos', (data) => {
+      if (data) {
+        newRepos = JSON.parse(data);
+        this.updateState.bind(this);
+        this.updateState(newRepos);
+        console.log('retrieved');
+      } else {
+        console.log('couldnt retrieve data from server')
+      }
     });
 
   }
 
+  updateState(data) {
+    this.setState({
+      repos: data
+    });
+    console.log(this.state.repos)
+  }
 
+  updateRepos() {
+    var newRepos;
 
-  componentDidMount() {
-
-    axios.get('/repos').then(res => {
-      this.setState({repos: [res]});
+    //$.post('/repos');
+    $.get('/repos', (data) => {
+      if (data) {
+        newRepos = JSON.parse(data);
+        this.updateState.bind(this);
+        this.updateState(newRepos);
+      } else {
+        console.log('couldnt retrieve data from server')
+      }
     });
 
+  }
+
+  componentDidMount() {
+    this.updateRepos();
   }
 
   render() {
 
     return (<div>
       <h1>Github Fetcher</h1>
+      <button onClick={this.updateRepos.bind(this)}>Update</button>
       <RepoList repos={this.state.repos} />
-      <Search onSearch={this.search.bind(this)} />
+      <Search onSearch={this.search/*.bind(this)*/} />
     </div>)
   }
 }
